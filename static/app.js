@@ -442,10 +442,14 @@ PROCESS.VALIDATION:
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt })
       });
+      if (!resp.ok) {
+        const errorText = await resp.text();
+        throw new Error(`Server status ${resp.status}: ${errorText || 'Service initializing'}`);
+      }
       const data = await resp.json();
       updateMessage(loadingId, formatMarkdown(data.response));
     } catch (err) {
-      updateMessage(loadingId, `<p class="text-danger">Error: ${err.message}</p>`);
+      updateMessage(loadingId, `<p class="text-danger"><i class="fa-solid fa-triangle-exclamation"></i> ${err.message}</p>`);
     }
   }
 

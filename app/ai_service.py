@@ -24,7 +24,6 @@ class T24AIService:
         self.memory_store = memory_store or T24MemoryStore()
 
     async def generate_response(self, user_query: str, chat_history: List[Dict[str, str]] = None) -> str:
-        # Retrieve learned samples from memory
         learned_context = self.memory_store.get_learning_context_for_prompt(user_query)
         effective_system_prompt = BASE_SYSTEM_PROMPT
         if learned_context:
@@ -32,10 +31,11 @@ class T24AIService:
 
         # Check if Gemini API key is available
         if self.gemini_api_key:
-            try:
-                return await self._call_gemini(user_query, effective_system_prompt, chat_history)
-            except Exception as e:
-                print(f"[WARN] Gemini call failed: {e}. Falling back to Expert Engine.")
+            for model_name in ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"]:
+                try:
+                    return await self._call_gemini(user_query, effective_system_prompt, model_name)
+                except Exception as e:
+                    print(f"[WARN] Gemini {model_name} call failed: {e}. Trying next model...")
 
         # Check if OpenAI API key is available
         if self.openai_api_key:
@@ -47,8 +47,8 @@ class T24AIService:
         # Default: Fallback Expert Response Engine with learned memory integration
         return self._expert_fallback_engine(user_query, learned_context)
 
-    async def _call_gemini(self, user_query: str, system_prompt: str, chat_history: List[Dict[str, str]]) -> str:
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key={self.gemini_api_key}"
+    async def _call_gemini(self, user_query: str, system_prompt: str, model_name: str = "gemini-2.0-flash") -> str:
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={self.gemini_api_key}"
         
         contents = [
             {"role": "user", "parts": [{"text": system_prompt + "\n\nUser Query: " + user_query}]}
@@ -83,7 +83,19 @@ class T24AIService:
         if learned_context:
             response_prefix = "> 💡 **Context Note**: Integrated learned conventions from your custom sample library.\n\n"
 
-        if "lock" in q or "f.readu" in q or "f.release" in q or "deadlock" in q:
+        if q in ["hi", "hello", "hey", "greetings"]:
+            return response_prefix + """### Temenos T24 / TAFJ Architect Assistant
+
+Hello! I am your **T24 & TAFJ Core Banking Technical Architect**.
+
+How can I help you today? Here are some tasks you can ask me to do:
+1. **Scaffold a Subroutine**: (e.g., *"Write a validation routine for CUSTOMER.STATUS"* or *"Create a multi-threaded batch service for interest accrual"*).
+2. **Audit / Debug Code**: (e.g., *"Check my routine for record locking deadlocks and DCOUNT performance issues"*).
+3. **Core Accounting (`EB.ACCOUNTING`)**: (e.g., *"Generate balanced STMT.ENTRY and CATEG.ENTRY records"*).
+4. **Arrangement Architecture (AA)**: (e.g., *"How do I read contract balances from EB.CONTRACT.BALANCES?"*).
+5. **Continuous Learning**: Paste your bank's custom routines into the **Pattern Learning** tab so I can learn your internal table conventions!"""
+
+        elif "lock" in q or "f.readu" in q or "f.release" in q or "deadlock" in q:
             return response_prefix + """### T24 Concurrency & Record Locking Architecture
 
 In Temenos T24 and TAFJ, record concurrency is governed by the **Lock Manager** and the `F.RECORD.LOCK` table:
