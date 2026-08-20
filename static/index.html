@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Temenos T24 / TAFJ Master Developer Tool</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="dark-theme">
+  <!-- Top Navigation Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="logo-icon">
+        <i class="fa-solid fa-building-columns"></i>
+      </div>
+      <div class="logo-text">
+        <h1>Temenos T24 / TAFJ <span>Studio</span></h1>
+        <p>Continuous-Learning Core Banking Architecture Tool</p>
+      </div>
+    </div>
+    <div class="header-center nav-tabs">
+      <button class="nav-tab active" data-tab="studio"><i class="fa-solid fa-code"></i> Code Studio</button>
+      <button class="nav-tab" data-tab="scaffolder"><i class="fa-solid fa-wand-magic-sparkles"></i> Routine Scaffolder</button>
+      <button class="nav-tab" data-tab="learning"><i class="fa-solid fa-graduation-cap"></i> Pattern Learning <span id="learnedCountBadge" class="badge badge-stmt">0</span></button>
+      <button class="nav-tab" data-tab="ofs"><i class="fa-solid fa-arrows-split-up-and-left"></i> OFS & Accounting</button>
+      <button class="nav-tab" data-tab="ai-chat"><i class="fa-solid fa-robot"></i> AI Architect Chat</button>
+      <button class="nav-tab" data-tab="knowledge"><i class="fa-solid fa-book-bookmark"></i> Knowledge Hub</button>
+    </div>
+    <div class="header-right">
+      <span class="status-badge"><span class="dot"></span> TAFJ JVM Ready</span>
+      <button id="themeToggle" class="icon-btn" title="Toggle Theme"><i class="fa-solid fa-moon"></i></button>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="app-main">
+    
+    <!-- TAB 1: CODE STUDIO & LINTER -->
+    <section id="studio" class="tab-pane active">
+      <div class="studio-layout">
+        <!-- Editor Panel -->
+        <div class="editor-pane card">
+          <div class="pane-header">
+            <div class="file-info">
+              <i class="fa-regular fa-file-code"></i>
+              <span id="currentFileName">V.VAL.CHECK.LIMIT.EXPIRY.b</span>
+            </div>
+            <div class="pane-actions">
+              <button id="sendToLearnBtn" class="btn btn-secondary btn-sm" title="Save this code into AI Learning Memory"><i class="fa-solid fa-brain"></i> Learn Sample</button>
+              <button id="loadSampleBtn" class="btn btn-secondary btn-sm"><i class="fa-solid fa-file-import"></i> Load Sample</button>
+              <button id="downloadCodeBtn" class="btn btn-secondary btn-sm"><i class="fa-solid fa-download"></i> Export .b</button>
+              <button id="runLintBtn" class="btn btn-primary btn-sm"><i class="fa-solid fa-shield-halved"></i> Run T24 Linter</button>
+            </div>
+          </div>
+          <div class="editor-container">
+            <textarea id="codeEditor" spellcheck="false" placeholder="Paste or type your T24 Infobasic / jBC code here..."></textarea>
+          </div>
+        </div>
+
+        <!-- Linter Diagnostics Panel -->
+        <div class="diagnostics-pane card">
+          <div class="pane-header">
+            <h3><i class="fa-solid fa-stethoscope"></i> T24 Quality & Concurrency Audit</h3>
+            <span id="scoreBadge" class="score-badge">Score: --</span>
+          </div>
+          <div id="lintResultsContainer" class="results-container">
+            <div class="empty-state">
+              <i class="fa-solid fa-magnifying-glass-chart"></i>
+              <p>Click <strong>Run T24 Linter</strong> to perform deep static analysis for concurrency, multi-company OPF rules, dynamic arrays, and TAFJ performance standards.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: ROUTINE SCAFFOLDER -->
+    <section id="scaffolder" class="tab-pane">
+      <div class="scaffolder-layout">
+        <div class="templates-sidebar card">
+          <h3><i class="fa-solid fa-cubes"></i> Routine Archetypes</h3>
+          <div id="templateList" class="template-list">
+            <!-- Populated dynamically via JS -->
+          </div>
+        </div>
+        <div class="template-form-container card">
+          <div class="pane-header">
+            <h3 id="templateTitle">Configure Routine</h3>
+            <button id="generateRoutineBtn" class="btn btn-primary btn-sm"><i class="fa-solid fa-bolt"></i> Generate Routine</button>
+          </div>
+          <p id="templateDescription" class="template-desc">Select an archetype to configure parameters.</p>
+          <div id="dynamicFormFields" class="form-grid">
+            <!-- Dynamic Fields -->
+          </div>
+          <div class="generated-preview">
+            <div class="preview-header">
+              <span><i class="fa-solid fa-terminal"></i> Generated Code Output</span>
+              <button id="copyGeneratedBtn" class="btn btn-secondary btn-sm"><i class="fa-regular fa-copy"></i> Copy</button>
+              <button id="loadToEditorBtn" class="btn btn-secondary btn-sm"><i class="fa-solid fa-arrow-right-to-bracket"></i> Load in Editor</button>
+            </div>
+            <pre><code id="generatedCodeBlock">* Select a template and click 'Generate Routine'</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: PATTERN LEARNING & MEMORY -->
+    <section id="learning" class="tab-pane">
+      <div class="learning-layout">
+        <!-- Submission Form -->
+        <div class="card learning-form-card">
+          <div class="pane-header">
+            <h3><i class="fa-solid fa-graduation-cap"></i> Ingest Code Pattern</h3>
+          </div>
+          <p class="section-desc">Feed your bank's production routines, custom tables, and naming conventions. The AI will internalize these patterns for all future code generations.</p>
+          
+          <div class="form-group">
+            <label>Pattern / Routine Title</label>
+            <input type="text" id="learnTitle" placeholder="e.g., Bank Custom KYC Validation Pattern" class="input-control">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Category / Module</label>
+              <select id="learnCategory" class="input-control">
+                <option value="Validation Hook">Validation Hook (.VALIDATION)</option>
+                <option value="Batch Service">Batch Service (Service Framework)</option>
+                <option value="Arrangement Architecture">Arrangement Architecture (AA)</option>
+                <option value="Core Accounting">Core Accounting (EB.ACCOUNTING)</option>
+                <option value="OFS Integration">OFS Integration</option>
+                <option value="NOFILE Enquiry">NOFILE Enquiry</option>
+                <option value="Utility / Library">Utility / Helper Routine</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Tags (Comma separated)</label>
+              <input type="text" id="learnTags" placeholder="e.g., KYC, CUSTOMER, AUDIT" class="input-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Custom Rules / Architectural Notes</label>
+            <input type="text" id="learnNotes" placeholder="e.g., Always use L.CUST.DOC.NO from local reference position 3" class="input-control">
+          </div>
+          <div class="form-group">
+            <label>Source Code Sample</label>
+            <textarea id="learnCode" class="input-control code-textarea" rows="8" placeholder="Paste your verified T24 Infobasic code sample here..."></textarea>
+          </div>
+          <button id="submitLearnBtn" class="btn btn-primary"><i class="fa-solid fa-brain"></i> Ingest & Train AI Memory</button>
+        </div>
+
+        <!-- Learned Samples Explorer -->
+        <div class="card learning-memory-card">
+          <div class="pane-header">
+            <h3><i class="fa-solid fa-database"></i> Active Learned Knowledge Store</h3>
+            <button id="refreshSamplesBtn" class="btn btn-secondary btn-sm"><i class="fa-solid fa-arrows-rotate"></i> Refresh</button>
+          </div>
+          <div id="learnedSamplesList" class="learned-samples-container">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: OFS & ACCOUNTING PLAYGROUND -->
+    <section id="ofs" class="tab-pane">
+      <div class="ofs-grid">
+        <!-- OFS Message Builder -->
+        <div class="card ofs-card">
+          <div class="pane-header">
+            <h3><i class="fa-solid fa-envelope-open-text"></i> OFS Message Builder & Parser</h3>
+          </div>
+          <div class="form-group">
+            <label>Application & Version</label>
+            <input type="text" id="ofsAppVersion" value="FUNDS.TRANSFER,ACTR.INPUT" class="input-control">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Function</label>
+              <select id="ofsFunction" class="input-control">
+                <option value="I">I (Input / Commit)</option>
+                <option value="A">A (Authorise)</option>
+                <option value="D">D (Delete)</option>
+                <option value="R">R (Reverse)</option>
+                <option value="V">V (Verify)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Operation</label>
+              <select id="ofsOperation" class="input-control">
+                <option value="PROCESS">PROCESS</option>
+                <option value="VALIDATE">VALIDATE</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Company Code</label>
+              <input type="text" id="ofsCompany" value="BNK100001" class="input-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Transaction Fields (Field=Value pairs, one per line)</label>
+            <textarea id="ofsFieldList" class="input-control" rows="4">DEBIT.ACCT.NO=100204
+CREDIT.ACCT.NO=100305
+DEBIT.AMOUNT=1500.00
+DEBIT.CURRENCY=USD</textarea>
+          </div>
+          <button id="buildOfsBtn" class="btn btn-primary"><i class="fa-solid fa-gears"></i> Build Raw OFS Payload</button>
+          
+          <div class="ofs-output-box">
+            <label>Formed OFS Message Payload:</label>
+            <pre><code id="ofsResultPayload">Click 'Build Raw OFS Payload'</code></pre>
+          </div>
+        </div>
+
+        <!-- EB.ACCOUNTING Visualizer -->
+        <div class="card ofs-card">
+          <div class="pane-header">
+            <h3><i class="fa-solid fa-scale-balanced"></i> EB.ACCOUNTING Balanced Ledger Preview</h3>
+          </div>
+          <p class="section-desc">Validates the Net-Zero Rule across customer statement lines (STMT.ENTRY) and internal P&L categories (CATEG.ENTRY).</p>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label>Customer Debit Account</label>
+              <input type="text" id="accDebitAcct" value="100204" class="input-control">
+            </div>
+            <div class="form-group">
+              <label>Fee Amount (LCY)</label>
+              <input type="number" id="accAmount" value="250.00" class="input-control">
+            </div>
+            <div class="form-group">
+              <label>P&L Credit Category</label>
+              <input type="text" id="accPlCategory" value="51000" class="input-control">
+            </div>
+          </div>
+
+          <button id="visualizeAccountingBtn" class="btn btn-secondary"><i class="fa-solid fa-calculator"></i> Calculate & Balance Entries</button>
+
+          <div class="ledger-table-container">
+            <table class="ledger-table">
+              <thead>
+                <tr>
+                  <th>Entry Type</th>
+                  <th>Account / Category</th>
+                  <th>Sign</th>
+                  <th>Amount (LCY)</th>
+                  <th>Txn Code</th>
+                </tr>
+              </thead>
+              <tbody id="ledgerTableBody">
+                <tr>
+                  <td><span class="badge badge-stmt">STMT.ENTRY</span></td>
+                  <td>100204 (Customer)</td>
+                  <td><span class="text-danger">DEBIT (-)</span></td>
+                  <td>-250.00</td>
+                  <td>150</td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-categ">CATEG.ENTRY</span></td>
+                  <td>PL51000 (Internal)</td>
+                  <td><span class="text-success">CREDIT (+)</span></td>
+                  <td>+250.00</td>
+                  <td>150</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="3"><strong>Net Accounting Balance (Must be 0.00):</strong></td>
+                  <td colspan="2"><strong id="netBalanceValue" class="text-success">0.00 LCY (BALANCED)</strong></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: AI ARCHITECT CHAT -->
+    <section id="ai-chat" class="tab-pane">
+      <div class="chat-container card">
+        <div class="pane-header">
+          <h3><i class="fa-solid fa-brain"></i> Temenos T24 Master Core Banking Architect</h3>
+          <span class="chat-badge"><i class="fa-solid fa-bolt"></i> 15+ Yrs + Continuous In-Memory Learning</span>
+        </div>
+        <div class="prompt-chips">
+          <button class="chip" data-prompt="How do I prevent record lock deadlocks in a multi-threaded batch service?">🔒 Batch Lock Handling</button>
+          <button class="chip" data-prompt="Explain how to extract effective property conditions in Arrangement Architecture (AA).">🏛️ AA Property Resolution</button>
+          <button class="chip" data-prompt="Generate a validation routine using our bank's custom patterns from memory.">🧠 Apply Learned Patterns</button>
+          <button class="chip" data-prompt="Show me how to dynamically cache LOCAL.REF positions using EB.GET.LOCREF.">🏷️ Local Reference Caching</button>
+        </div>
+        <div id="chatMessages" class="chat-messages">
+          <div class="message system-msg">
+            <div class="msg-avatar"><i class="fa-solid fa-robot"></i></div>
+            <div class="msg-content">
+              <p>Welcome to the <strong>Temenos T24 / TAFJ Master Architect Studio</strong>. I am strictly grounded in official Temenos standards, and I automatically adapt to all custom patterns you feed into the <strong>Pattern Learning</strong> store. How can I assist with your routine, batch service, or custom integration today?</p>
+            </div>
+          </div>
+        </div>
+        <div class="chat-input-bar">
+          <textarea id="chatInput" placeholder="Ask any T24, TAFJ, jBASE, OFS, or batch architectural question..." rows="2"></textarea>
+          <button id="sendChatBtn" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> Send</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 6: KNOWLEDGE HUB -->
+    <section id="knowledge" class="tab-pane">
+      <div class="knowledge-grid">
+        <div class="card">
+          <h3><i class="fa-solid fa-layer-group"></i> Dynamic Array Hierarchy</h3>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Delimiter</th>
+                  <th>Constant</th>
+                  <th>ASCII</th>
+                  <th>Symbol</th>
+                  <th>Hierarchy Purpose</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Field Marker</strong></td>
+                  <td><code>@FM</code></td>
+                  <td>254</td>
+                  <td><code>^</code></td>
+                  <td>Separates table columns / fields</td>
+                </tr>
+                <tr>
+                  <td><strong>Value Marker</strong></td>
+                  <td><code>@VM</code></td>
+                  <td>253</td>
+                  <td><code>]</code></td>
+                  <td>Separates multi-values within a field</td>
+                </tr>
+                <tr>
+                  <td><strong>Sub-Value Marker</strong></td>
+                  <td><code>@SM</code></td>
+                  <td>252</td>
+                  <td><code>\</code></td>
+                  <td>Separates sub-values within a multi-value</td>
+                </tr>
+                <tr>
+                  <td><strong>Text Marker</strong></td>
+                  <td><code>@TM</code></td>
+                  <td>251</td>
+                  <td><code>_</code></td>
+                  <td>Text block and internal buffer separator</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><i class="fa-solid fa-code-branch"></i> Essential COMMON Variables (I_COMMON)</h3>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Variable</th>
+                  <th>Data Structure</th>
+                  <th>Operational Role</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>ID.NEW</code></td>
+                  <td>String</td>
+                  <td>Current active record ID in memory</td>
+                </tr>
+                <tr>
+                  <td><code>R.NEW</code></td>
+                  <td>Dynamic Array</td>
+                  <td>In-flight record data with pending mutations</td>
+                </tr>
+                <tr>
+                  <td><code>R.OLD</code></td>
+                  <td>Dynamic Array</td>
+                  <td>Record state before user modification</td>
+                </tr>
+                <tr>
+                  <td><code>V$FUNCTION</code></td>
+                  <td>Char</td>
+                  <td>Active function: <code>I</code> (Input), <code>A</code> (Auth), <code>D</code> (Delete), <code>R</code> (Reverse)</td>
+                </tr>
+                <tr>
+                  <td><code>TODAY</code></td>
+                  <td>Date (YYYYMMDD)</td>
+                  <td>Active financial bank system date</td>
+                </tr>
+                <tr>
+                  <td><code>ID.COMPANY</code></td>
+                  <td>String (9 chars)</td>
+                  <td>Current active company / branch mnemonic code</td>
+                </tr>
+                <tr>
+                  <td><code>E / ETEXT</code></td>
+                  <td>String / Dynamic Array</td>
+                  <td>Standard error code holder before <code>STORE.END.ERROR</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <span>Temenos T24 / TAFJ Master Developer Tool v1.1.0 (with Continuous Learning)</span>
+    <span>Deployable on Render Web Services</span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
